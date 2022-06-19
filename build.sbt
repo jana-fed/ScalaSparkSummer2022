@@ -6,3 +6,5 @@ lazy val root = (project in file("."))
   .settings(
     name := "ScalaSparkSummer2022"
   )
+
+
