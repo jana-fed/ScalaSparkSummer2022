@@ -29,23 +29,6 @@ object Day13MongoDB_CRUD_operations extends App {
   val resultsBuffer = ArrayBuffer[Document]()
 
 
-
-
-  //  val allRestaurants = collection.find() //find() is similar to SQL SELECT * from restaurants just in MongoDB syntax
-  //  val allRestaurants = collection.find(equal("borough","Staten Island"))
-  //  val allRestaurants = collection.find(and(gte("stars", 2), Filters.lt("stars", 5), equal("categories", "Bakery")))
-  //    val allRestaurants = collection.find(gte("address.building", "3000")) //greather lexicographically
-  ////    val allRestaurants = collection.find(Filters.regex("name", ".*Kosher.*"))
-  //TODO find ALL restaurants in Manhattan offering barbeque OR BBQ  in name (maybe try cuisine as well)
-  val allRestaurants = collection.find(and(equal("borough", "Manhattan"),or(Filters.regex("name", ".*barbeque.*"),Filters.regex("name",".*BBQ.*"))))
-    .subscribe(
-      (doc: Document) => {
-        resultsBuffer += doc //so each document(row of JSON) will be added to our buffer
-      },
-      (e: Throwable) => println(s"Query error: $e"),
-      //this is what we can do after the query is finished
-      afterQuerySuccess //NOTICE in functional style I do not call the function here I just tell my subscription WHAT to call
-    )
   //this line should run before our closing line
   println("Query is still Running - Data is not guaranteed to be ready")
   //  println(s"Buffer length is ${resultsBuffer.length}")
@@ -67,4 +50,15 @@ object Day13MongoDB_CRUD_operations extends App {
     client.close()
   }
 
+  //TODO find ALL restaurants in Manhattan offering barbeque OR BBQ  in name (maybe try cuisine as well)
+  val allRestaurants = collection.find(and(equal("borough", "Manhattan"),or(Filters.regex("name", ".*Barbeque.*"),
+    Filters.regex("name", ".*BBQ.*"))))
+    .subscribe(
+      (doc: Document) => {
+        resultsBuffer += doc //so each document(row of JSON) will be added to our buffer
+      },
+      (e: Throwable) => println(s"Query error: $e"),
+      //this is what we can do after the query is finished
+      afterQuerySuccess //NOTICE in functional style I do not call the function here I just tell my subscription WHAT to call
+    )
 }
